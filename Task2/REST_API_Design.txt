@@ -1,0 +1,95 @@
+REST API Design for Retrieving User Profile Information
+
+1. Endpoint URL and HTTP Method
+URL: /api/users/{username}
+HTTP Method: GET
+This URL structure follows RESTful principles, using the username as a path parameter to retrieve the specific user's profile information.
+
+2. Expected Request Parameters
+Path Parameter:
+
+username: The unique identifier for the user (string, required). It will be used to fetch the user's profile.
+Optional Query Parameters:
+
+fields: Specifies which fields of the user profile to include in the response (e.g., name, email, age). Default: all fields.
+Example: /api/users/{username}?fields=name,email
+includePosts: A boolean flag to include user's recent posts or activities. Default: false.
+Example: /api/users/{username}?includePosts=true
+includeFriends: A boolean flag to include user's friend list. Default: false.
+Example: /api/users/{username}?includeFriends=true
+3. Response Structure
+Success Response (200 OK):
+
+json request:-
+{
+  "username": "_karanubale_",
+  "name": "karan ubale",
+  "email": "karanubale9373@example.com",
+  "age": 21,
+  "profile_picture": "https://example.com/profile/karan.jpg",
+  "posts": [
+    {
+      "post_id": "12345",
+      "content": "Had a great day!",
+      "timestamp": "2024-10-10T12:30:00Z"
+    }
+  ],
+  "friends": [
+    {
+      "username": "_karanubale_",
+      "name": "karan ubale"
+    }
+  ]
+}
+
+If the fields query parameter is specified, only those fields will be returned.
+If includePosts is true, the user's recent posts will be included in the response.
+If includeFriends is true, the user's friends list will be included in the response.
+
+
+4. Error Handling and Input Validation
+a. Input Validation:
+Username Validation:
+
+Ensure the username only contains valid characters (e.g., alphanumeric, underscores). If the username is invalid, respond with a 400 Bad Request.
+Error Response (400):
+
+json
+{
+  "error": "Invalid username format."
+}
+
+Query Parameter Validation:
+Validate that includePosts and includeFriends are either true or false (boolean).
+Validate that the fields parameter contains valid field names.
+
+b. Error Handling:
+User Not Found (404 Not Found):
+If the user does not exist, return a 404 status code with a meaningful message.
+Error Response (404):
+json
+{
+  "error": "User not found."
+}
+
+Internal Server Error (500 Internal Server Error):
+If any unexpected error occurs on the server, return a 500 status code with a general error message.
+Error Response (500):
+json
+{
+  "error": "Internal server error. Please try again later."
+}
+
+Invalid Query Parameter (400 Bad Request):
+If an invalid value is provided for the query parameters (e.g., an unrecognized field name in the fields parameter), return a 400 status code.
+Error Response (400):
+json
+{
+  "error": "Invalid query parameter."
+}
+
+
+5. Security Considerations
+Authentication: Ensure that only authenticated users can retrieve profile information, using tokens (JWT) or session management.
+Authorization: Users should only be able to access their own profile unless they have the proper permissions to view others' profiles.
+Rate Limiting: Implement rate limiting to avoid abuse of the API by malicious users or bots.

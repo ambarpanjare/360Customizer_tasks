@@ -1,0 +1,6 @@
+1. What TypeScript feature is being used to specify the return type of the getUserInfo function?
+
+In the provided function, explicit return type annotation is being used. The return type is specified as Promise<{ name: string; age: number }>.
+This means that the getUserInfo function is expected to return a Promise that resolves to an object with the following structure:
+A name property of type string
+An age property of type number

@@ -1,0 +1,27 @@
+To optimize the query in PostgreSQL, indexing the tables correctly is crucial for improving query performance, especially when dealing with large datasets. Here's how I would approach indexing:
+
+1. Composite Index on orders(user_id, order_date)
+The query filters on order_date to fetch orders from the last month and groups the data by user_id.
+By creating a composite index on user_id and order_date, PostgreSQL can efficiently retrieve the relevant records based on both the user and the date range.
+The order of columns in the index matters. Since the query filters first by order_date and then groups by user_id, this index will make the filtering and grouping steps faster.
+
+CREATE INDEX idx_orders_user_date ON orders(user_id, order_date);
+How it helps:
+It speeds up the JOIN operation, where orders are matched to users based on user_id.
+The index also allows efficient range filtering (order_date) and is useful when the database has many entries spanning over months or years.
+
+2. Primary Key or Unique Index on users(user_id)
+The user_id column in the users table should be the primary key or at least have a unique index if it's not already the primary key.
+This ensures efficient lookups and joins between the users and orders tables, where user_id is the common field.
+
+CREATE UNIQUE INDEX idx_users_user_id ON users(user_id);
+How it helps:
+It ensures that lookups on the users table (during the join operation) are fast and efficient since user_id will be indexed and unique.
+
+3. Index on orders(amount) (optional)
+Although summing up the amount column is a lightweight operation, creating an index on amount can help PostgreSQL optimize aggregations.
+However, this index is less critical than the composite index on user_id and order_date, as aggregations typically benefit more from well-optimized filtering and joining.
+
+CREATE INDEX idx_orders_amount ON orders(amount);
+How it helps:
+Speeds up the SUM(o.amount) operation in cases where there are frequent aggregations across a large number of orders.

@@ -1,0 +1,7 @@
+2. Importance of Differentiating Between Error Types
+a. Better User Experience: Differentiating between errors like "user not found" and "invalid password" gives users more specific feedback, helping them understand what went wrong. For example:
+   If the user enters an incorrect password, knowing their account exists encourages them to retry.
+   If the user is not found, they may realize they used the wrong email or need to create an account.
+b. Security Considerations: Be mindful of providing too much detail. For instance, revealing whether a user exists might expose the system to enumeration attacks. You could obscure responses for login attempts by saying "Invalid credentials" without specifying if the email or password was wrong. However, if security isn’t a major concern in your scenario, specific messages improve UX.
+c. Error Logging and Monitoring: Differentiating error types allows for better logging and debugging. Developers and support teams can track specific issues more easily (e.g., failed logins due to incorrect passwords vs. missing accounts).
+d. Error-Specific Responses: By categorizing errors (e.g., 404 for not found, 401 for unauthorized), clients can handle responses accordingly (e.g., showing different messages or redirecting users).

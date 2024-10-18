@@ -1,0 +1,16 @@
+2. How would you modify this function to handle cases where the API response might be missing the age property?
+we can modify the return type to account for cases where the age property might be undefined by updating the return type to include age?: number. This indicates that the age property is optional, meaning it might or might not be present in the API response.
+
+modified the function:
+
+typescript
+function getUserInfo(userId: number): Promise<{ name: string; age?: number }> {
+  return fetch(`/api/users/${userId}`)
+    .then(response => response.json())
+    .then(data => {
+      return {
+        name: data.name,
+        age: data.age // This will be undefined if age is not present
+      };
+    });
+}

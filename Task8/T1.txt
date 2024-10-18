@@ -1,0 +1,74 @@
+Data Validation in TypeScript
+Scenario: You have the following TypeScript function that processes user input.
+
+typescript
+interface UserInput {
+    name: string;
+    email: string;
+}
+function processUserInput(input: UserInput) {
+    // Process the input
+}
+
+1. Enhancing the UserInput Interface for Validation Rules
+
+To enhance the UserInput interface with validation rules, you can use utility types and define methods for validation:
+Define Type Guards: Create type guard functions that check if the properties of UserInput meet certain validation criteria, such as proper email format.
+Enhanced Interface with Optional Validation Methods:
+
+typescript
+interface UserInput {
+    name: string;
+    email: string;
+    // Optional method to validate email format
+    validateEmail?: () => boolean;
+}
+
+function isValidEmail(email: string): boolean {
+    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailPattern.test(email);
+}
+
+// Implementation of the validateEmail method
+const userInput: UserInput = {
+    name: "karan ubale",
+    email: "karan.ubale@example.com",
+    validateEmail: function () {
+        return isValidEmail(this.email);
+    }
+};
+
+if (userInput.validateEmail && userInput.validateEmail()) {
+    processUserInput(userInput);
+} else {
+    console.error("Invalid email format.");
+}
+
+
+2. Strategy for Validating User Input in a TypeScript Application
+
+To validate user input in a TypeScript application, you can follow this strategy:
+Type Guards and Interfaces:
+
+Define interfaces with necessary properties and implement type guards for validation. Use functions to validate each property according to the rules.
+Centralized Validation Logic:
+
+Create a separate validation module that contains all validation functions, making it easy to manage and reuse.
+Validation Function:
+
+Create a function that validates the entire user input object against the defined rules.
+typescript
+function validateUserInput(input: UserInput): boolean {
+    return input.name.length > 0 && isValidEmail(input.email);
+}
+
+Error Handling:
+Return meaningful error messages or throw exceptions when validation fails, allowing for easy debugging and better user experience.
+typescript
+if (!validateUserInput(userInput)) {
+    throw new Error("Validation failed: Invalid user input.");
+}
+Integration with UI:
+If using a UI framework (like React), integrate validation into form handling logic to provide instant feedback to users when they enter invalid data.
+Use of Libraries:
+Consider using libraries such as Yup or Joi for schema-based validation, which can provide a more declarative approach to data validation, especially for complex objects.

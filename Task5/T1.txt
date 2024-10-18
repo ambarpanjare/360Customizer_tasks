@@ -1,0 +1,48 @@
+1. Improving the Error Handling in the loginUser Function
+To enhance error handling in the loginUser function, we can introduce:
+
+Specific error classes: Define custom error types for better clarity (e.g., UserNotFoundError, InvalidPasswordError).
+HTTP status codes: Return appropriate status codes with error messages (e.g., 404 for user not found, 401 for invalid password).
+Error messages: Use detailed but user-friendly error messages.
+Logging: Log internal errors (e.g., database errors) for debugging while returning a generic message to the client.
+improved version of the function:
+
+javascript
+class UserNotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'UserNotFoundError';
+    this.statusCode = 404; 
+  }
+}
+
+class InvalidPasswordError extends Error {
+  constructor(message) {
+    super(message);
+    this.name = 'InvalidPasswordError';
+    this.statusCode = 401; // Unauthorized
+  }
+}
+
+async function loginUser(email, password) {
+  try {
+    const user = await findUserByEmail(email);
+    if (!user) {
+      throw new UserNotFoundError('User not found');
+    }
+    
+    const isPasswordValid = await verifyPassword(user, password);
+    if (!isPasswordValid) {
+      throw new InvalidPasswordError('Invalid password');
+    }
+    
+    return { success: true, user };
+    
+  } catch (error) {
+    if (error instanceof UserNotFoundError || error instanceof InvalidPasswordError) {
+      return { success: false, message: error.message, statusCode: error.statusCode };
+    }
+    console.error('Internal Server Error:', error);
+    return { success: false, message: 'An internal server error occurred', statusCode: 500 };
+  }
+}
